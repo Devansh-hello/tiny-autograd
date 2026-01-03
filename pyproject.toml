@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tiny-autograd"
+version = "0.1.0"
+description = "A small reverse-mode autodiff engine built from scratch, checked against finite differences and PyTorch."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7",
+    "torch>=2.0",
+    "scikit-learn>=1.2",
+    "matplotlib>=3.6",
+    "ruff>=0.4",
+]
+
+[tool.setuptools.packages.find]
+include = ["tinygrad_scratch*"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E731", "E741", "E704"]
