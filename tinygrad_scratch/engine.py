@@ -30,6 +30,37 @@ class Value:
         out._backward = _backward
         return out
 
+    def __pow__(self, other):
+        assert isinstance(other, (int, float)), "only support int or float powers"
+        out = Value(self.data ** other, (self,), f"**{other}")
+
+        def _backward():
+            self.grad += (other * self.data ** (other - 1)) * out.grad
+
+        out._backward = _backward
+        return out
+
+    def __neg__(self):
+        return self * -1
+
+    def __sub__(self, other):
+        return self + (-other)
+
+    def __truediv__(self, other):
+        return self * other ** -1
+
+    def __radd__(self, other):
+        return self + other
+
+    def __rsub__(self, other):
+        return other + (-self)
+
+    def __rmul__(self, other):
+        return self * other
+
+    def __rtruediv__(self, other):
+        return other * self ** -1
+
     def backward(self):
         topo = []
         visited = set()
