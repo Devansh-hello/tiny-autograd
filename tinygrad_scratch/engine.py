@@ -1,3 +1,6 @@
+import math
+
+
 class Value:
     """A single number that remembers how it was computed."""
 
@@ -60,6 +63,44 @@ class Value:
 
     def __rtruediv__(self, other):
         return other * self ** -1
+
+    def relu(self):
+        out = Value(0.0 if self.data < 0 else self.data, (self,), "relu")
+
+        def _backward():
+            self.grad += (out.data > 0) * out.grad
+
+        out._backward = _backward
+        return out
+
+    def tanh(self):
+        t = math.tanh(self.data)
+        out = Value(t, (self,), "tanh")
+
+        def _backward():
+            self.grad += (1 - t * t) * out.grad
+
+        out._backward = _backward
+        return out
+
+    def exp(self):
+        e = math.exp(self.data)
+        out = Value(e, (self,), "exp")
+
+        def _backward():
+            self.grad += e * out.grad
+
+        out._backward = _backward
+        return out
+
+    def log(self):
+        out = Value(math.log(self.data), (self,), "log")
+
+        def _backward():
+            self.grad += (1 / self.data) * out.grad
+
+        out._backward = _backward
+        return out
 
     def backward(self):
         topo = []
