@@ -65,3 +65,15 @@ class MLP(Module):
         for layer in self.layers:
             params += layer.parameters()
         return params
+
+
+def mse_loss(predictions, targets):
+    total = Value(0.0)
+    for p, t in zip(predictions, targets):
+        total = total + (p - t) ** 2
+    return total * (1.0 / len(predictions))
+
+
+def bce_with_logits(logit, target):
+    abs_logit = logit.relu() + (-logit).relu()
+    return logit.relu() - logit * target + (1 + (-abs_logit).exp()).log()
