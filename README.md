@@ -31,6 +31,18 @@ pip install -e .[dev]
 pytest -q
 ```
 
-## results
+## results so far
 
-coming soon (still building).
+gradients vs pytorch (double precision), max difference over the test expressions:
+
+| expression | max grad difference |
+|---|---|
+| mul / div / pow / sub | 0.0 |
+| tanh, relu, exp | 0.0 |
+| log, pow | 0.0 |
+
+so the gradients agree with pytorch basically exactly (difference is zero up to
+floating point), wich is what i was hoping for. the finite-difference check
+agrees too, to about 1e-7.
+
+plots from training coming next.
