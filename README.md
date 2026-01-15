@@ -45,4 +45,19 @@ so the gradients agree with pytorch basically exactly (difference is zero up to
 floating point), wich is what i was hoping for. the finite-difference check
 agrees too, to about 1e-7.
 
-plots from training coming next.
+### training a net with the engine
+
+i train a small MLP (2 -> 16 -> 16 -> 1, tanh) on `make_moons` using my own
+Adam, with mse loss. it reaches **0.985** accuracy on 200 points.
+
+run it yourself:
+
+```bash
+python scripts/train_moons.py
+python scripts/plot_results.py
+```
+
+loss going down and the boundary it learns:
+
+![loss curve](assets/loss_curve.png)
+![decision boundary](assets/decision_boundary.png)
