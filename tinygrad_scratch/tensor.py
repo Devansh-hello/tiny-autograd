@@ -1,6 +1,15 @@
 import numpy as np
 
 
+def _unbroadcast(grad, shape):
+    while grad.ndim > len(shape):
+        grad = grad.sum(axis=0)
+    for axis, size in enumerate(shape):
+        if size == 1:
+            grad = grad.sum(axis=axis, keepdims=True)
+    return grad.reshape(shape)
+
+
 class Tensor:
     """An array that records operations, like Value but backed by numpy."""
 
@@ -16,8 +25,8 @@ class Tensor:
         out = Tensor(self.data + other.data, (self, other), "+")
 
         def _backward():
-            self.grad = self.grad + out.grad
-            other.grad = other.grad + out.grad
+            self.grad = self.grad + _unbroadcast(out.grad, self.data.shape)
+            other.grad = other.grad + _unbroadcast(out.grad, other.data.shape)
 
         out._backward = _backward
         return out
@@ -27,8 +36,8 @@ class Tensor:
         out = Tensor(self.data * other.data, (self, other), "*")
 
         def _backward():
-            self.grad = self.grad + other.data * out.grad
-            other.grad = other.grad + self.data * out.grad
+            self.grad = self.grad + _unbroadcast(other.data * out.grad, self.data.shape)
+            other.grad = other.grad + _unbroadcast(self.data * out.grad, other.data.shape)
 
         out._backward = _backward
         return out
