@@ -25,7 +25,8 @@ include = ["tinygrad_scratch*"]
 
 [tool.ruff]
 line-length = 100
+exclude = ["notebooks"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
-ignore = ["E731", "E741", "E704"]
+ignore = ["E731", "E741"]
