@@ -1,5 +1,7 @@
 # tiny-autograd
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Devansh-hello/tiny-autograd/blob/main/notebooks/01_walkthrough.ipynb)
+
 building a small autograd engine from scratch so i actually understand how
 backprop works instead of just calling `loss.backward()`.
 
@@ -45,6 +47,13 @@ so the gradients agree with pytorch basically exactly (difference is zero up to
 floating point), wich is what i was hoping for. the finite-difference check
 agrees too, to about 1e-7.
 
+i also ran a bigger check over 500 random expressions, the worst gradient
+difference vs pytorch was about **3.5e-15** (basically machine epsilon):
+
+```bash
+python scripts/benchmark_parity.py
+```
+
 ### training a net with the engine
 
 i train a small MLP (2 -> 16 -> 16 -> 1, tanh) on `make_moons` using my own
@@ -61,3 +70,20 @@ loss going down and the boundary it learns:
 
 ![loss curve](assets/loss_curve.png)
 ![decision boundary](assets/decision_boundary.png)
+
+## limitations & what i'd build next
+
+- the scalar engine is slow (pure python, one number at a time). its meant for
+  learning, not for real training.
+- the tensor engine only has the ops i actually needed (add, mul, matmul, relu,
+  sum). no conv or softmax yet.
+- no gpu and no graph optimisation.
+
+next thing i want to try is adding a couple more tensor ops and a tiny conv
+layer so i can run it on mnist.
+
+## where the ideas came from
+
+the scalar core is inspired by karpathy's micrograd. the numpy tensor engine
+with broadcasting, and checking every gradient against both finite-differences
+and pytorch, are the parts i added myself.
